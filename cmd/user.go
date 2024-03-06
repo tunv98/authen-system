@@ -19,6 +19,6 @@ func registerUserHandler(g gin.IRouter, config config.App) {
 	userAPI := g.Group("/user")
 	{
 		userAPI.POST("/login", handler.Login)
-		userAPI.POST("/sign-up", handler.SignUp)
+		userAPI.POST("/signup", handler.SignUp)
 	}
 }

@@ -18,7 +18,7 @@ type signUpRequest struct {
 	Email       string    `json:"email,omitempty"`
 	UserName    string    `json:"userName,omitempty"`
 	PassWord    string    `json:"password,omitempty"`
-	Birthday    time.Time `json:"birthday,omitempty"`
+	Birthday    string    `json:"birthday,omitempty"`
 	LatestLogin time.Time `json:"latestLogin,omitempty"`
 }
 
@@ -73,6 +73,7 @@ func (h *handler) SignUp(c *gin.Context) {
 		UserName:    signUpReq.UserName,
 		PassWord:    string(hash),
 		Birthday:    signUpReq.Birthday,
+		LatestLogin: signUpReq.LatestLogin,
 	}
 	if err := h.userRepo.Create(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -110,8 +111,17 @@ func (h *handler) Login(c *gin.Context) {
 		})
 		return
 	}
+	token, err := auth.GenerateToken(strconv.Itoa(int(userInfo.ID)), h.authConfig.SecretKey)
+	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	if err := h.userRepo.UpdateLatestLogin(userInfo.ID, time.Now()); err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"accessToken": auth.GenerateToken(strconv.Itoa(int(userInfo.ID)), h.authConfig.SecretKey),
+		"accessToken": token,
 	})
 }
 
@@ -120,6 +130,10 @@ func (r signUpRequest) isRequestValid() bool {
 		return true
 	}
 	if r.Email == "" && r.UserName == "" && r.PhoneNumber == "" {
+		return false
+	}
+	_, err := time.Parse("2006-01-02", r.Birthday)
+	if err != nil {
 		return false
 	}
 	return true

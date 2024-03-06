@@ -8,10 +8,10 @@ import (
 type User struct {
 	gorm.Model
 	FullName    string    `json:"fullName" gorm:"not null"`
-	PhoneNumber string    `json:"phoneNumber" gorm:"uniqueIndex"`
-	Email       string    `json:"email" gorm:"uniqueIndex"`
-	UserName    string    `json:"userName" gorm:"uniqueIndex"`
+	PhoneNumber string    `json:"phoneNumber" gorm:"unique"`
+	Email       string    `json:"email" gorm:"unique"`
+	UserName    string    `json:"userName" gorm:"unique"`
 	PassWord    string    `json:"passWord" gorm:"not null"`
-	Birthday    time.Time `json:"birthday"`
+	Birthday    string    `json:"birthday"`
 	LatestLogin time.Time `json:"latestLogin"`
 }

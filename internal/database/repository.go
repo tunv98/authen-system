@@ -4,11 +4,13 @@ import (
 	"authen-system/internal/models"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
+	"time"
 )
 
 type UserRepository interface {
 	Create(user *models.User) error
 	Find(queries map[string]string) (models.User, error)
+	UpdateLatestLogin(userID uint, newLatestLogin time.Time) error
 }
 
 type userRepo struct {
@@ -30,4 +32,12 @@ func (r *userRepo) Find(queries map[string]string) (models.User, error) {
 		return user, errors.Wrapf(err.Error, "failed to find user")
 	}
 	return user, nil
+}
+
+func (r *userRepo) UpdateLatestLogin(userID uint, newLatestLogin time.Time) error {
+	return r.db.
+		Model(&models.User{}).
+		Where("id = ?", userID).
+		Update("latest_login", newLatestLogin).
+		Error
 }

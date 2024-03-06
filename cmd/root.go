@@ -25,17 +25,19 @@ func RegisterHandler(
 	protectedAPIV1 := apiV1.Group("/home")
 	protectedAPIV1.Use(auth.ValidateToken(config.Authentication.SecretKey))
 	{
-		protectedAPIV1.GET("", func(c *gin.Context) {
-			userId, ok := c.Get("userID")
-			if !ok {
-				c.JSON(http.StatusBadRequest, gin.H{
-					"err": "user information is not existed",
-				})
-				return
-			}
-			c.JSON(http.StatusOK, gin.H{
-				"msg": fmt.Sprintf("you're logged in with id is %s", userId),
-			})
-		})
+		protectedAPIV1.GET("", accessHomePage)
 	}
+}
+
+func accessHomePage(c *gin.Context) {
+	userId, ok := c.Get("userID")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"err": "user information is not existed",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"msg": fmt.Sprintf("you're logged in with id is %s", userId),
+	})
 }

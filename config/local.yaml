@@ -1,11 +1,11 @@
-app:
-  port: 8080
+server:
+  port: ":8083"
 
 mysql:
   hostPort: "localhost:3306"
   username: "root"
-  password: "root"
-  databaseName: "user"
+  password: "abc@123"
+  databaseName: "authen_system"
   maxIdleConnections: 5
   maxOpenConnections: 10
   connectionMaxLifetime: 3600

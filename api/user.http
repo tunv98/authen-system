@@ -1,0 +1,26 @@
+POST http://localhost:8083/api/v1/user/signup
+Content-Type: application/json
+
+{
+  "fullName": "Nguyen Van A",
+  "phoneNumber": "0123456789",
+  "email": "anv@gmail.com",
+  "userName": "anv",
+  "password": "abc@123",
+  "birthday": "1998-01-01",
+  "latestLogin": "2024-03-06T00:00:00Z"
+}
+
+###
+POST http://localhost:8083/api/v1/user/login
+Content-Type: application/json
+
+{
+  "phoneNumber": "0123456789",
+  "password": "abc@123"
+}
+
+###
+GET http://localhost:8083/api/v1/home
+Content-Type: application/json
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDk3ODQ2MjUsInN1YiI6IjEifQ.iOOI5s0wV6c0rXshbfshyuFFqBM6HEA6PPxoLjNFCmM

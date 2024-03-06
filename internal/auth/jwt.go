@@ -17,7 +17,7 @@ func GenerateToken(userId, secretKey string) (string, error) {
 		"sub": userId,
 		"exp": time.Now().Add(time.Hour * 12).Unix(),
 	})
-	return token.SignedString(secretKey)
+	return token.SignedString([]byte(secretKey))
 }
 
 func ValidateToken(secretKey string) gin.HandlerFunc {

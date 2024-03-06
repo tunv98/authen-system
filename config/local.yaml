@@ -1,0 +1,14 @@
+app:
+  port: 8080
+
+mysql:
+  hostPort: "localhost:3306"
+  username: "root"
+  password: "root"
+  databaseName: "user"
+  maxIdleConnections: 5
+  maxOpenConnections: 10
+  connectionMaxLifetime: 3600
+
+authentication:
+  secretKey: "RCp1VZUYwnFbDo4fjN0Wd3pOIc6nlhmZpwqRzCrNXW4="

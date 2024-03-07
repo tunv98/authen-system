@@ -84,11 +84,11 @@ func (h *userHandler) SignUp(c *gin.Context) {
 	}
 	if err := h.userRepo.Create(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"err": fmt.Errorf("failed to create user, err: %s", err.Error()),
+			"err": fmt.Errorf("failed to create user, err: %s", err.Error()).Error(),
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{})
+	c.JSON(http.StatusOK, gin.H{"msg": "success"})
 }
 
 func (h *userHandler) Login(c *gin.Context) {
@@ -135,6 +135,7 @@ func (h *userHandler) Login(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
+		"msg":         "success",
 		"accessToken": token,
 	})
 }

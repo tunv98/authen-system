@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"fmt"
 	"sync"
 )
 
@@ -37,6 +38,7 @@ func (m *cache) DecreaseCounter(campaignID string) bool {
 		return false
 	}
 	m.campaignsCounts[campaignID]--
+	fmt.Printf("campaign %s with %d\n", campaignID, m.campaignsCounts[campaignID])
 	return true
 }
 

@@ -29,7 +29,7 @@ func (r *voucherRepo) Create(req VoucherRequest) error {
 	if time.Now().Before(req.EndDate) {
 		status = models.ExpiredStatus
 	}
-	voucher := models.Voucher{
+	voucher := &models.Voucher{
 		Code:        generateUniqueCode(),
 		CampaignID:  req.CampaignID,
 		UserID:      req.UserID,

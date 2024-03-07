@@ -2,10 +2,10 @@ POST http://localhost:8083/api/v1/user/signup
 Content-Type: application/json
 
 {
-  "fullName": "Nguyen Van A",
-  "phoneNumber": "0123456789",
-  "email": "anv@gmail.com",
-  "userName": "anv",
+  "fullName": "Nguyen Van C",
+  "phoneNumber": "0123456729",
+  "email": "cnv@gmail.com",
+  "userName": "cnv",
   "password": "abc@123",
   "birthday": "1998-01-01"
 }
@@ -15,7 +15,7 @@ POST http://localhost:8083/api/v1/user/login
 Content-Type: application/json
 
 {
-  "phoneNumber": "0123456789",
+  "phoneNumber": "0123456729",
   "password": "abc@123"
 }
 

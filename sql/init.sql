@@ -54,5 +54,8 @@ create index idx_vouchers_deleted_at on vouchers (deleted_at);
 
 ## inserts
 
-insert into campains (campaign_name, total_vouchers, discount_value, start_date, end_date)
-values ('TOPUP_FIRST_LOGIN', 100, 0.3, '2024-03-08 02:35:51.000', '2024-03-15 03:36:09.000')
+insert into campaigns (campaign_name, total_vouchers, discount_value, start_date, end_date)
+    values ('TOPUP_FIRST_LOGIN', 100, 0.3, '2024-03-08 02:35:51.000', '2024-03-15 03:36:09.000');
+
+insert into authen_system.users (full_name, phone_number, email, user_name, pass_word, birthday)
+    values ('Nguyen Van B', '0987654321', 'bva@gmail.com.vn','bnv', '$2a$10$ehf60Y3bzS182C1H6S5Rb.iw7yNABp2iNfZGyfcNSRX.7vwQ9.aEW','1998-01-01');

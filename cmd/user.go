@@ -20,7 +20,7 @@ func registerUserHandler(g gin.IRouter, config config.App) {
 	campaignRepo := database.NewCampaignRepository(db)
 	voucherHandler := controllers.NewVoucherHandler(voucherRepo, campaignRepo)
 	campaignQueue := controllers.NewCampaignQueue(voucherHandler)
-	defer campaignQueue.Start()
+	go campaignQueue.Start()
 
 	campaignCache := cache.NewCampaign()
 	handler := controllers.NewUserHandler(userRepo, config.Authentication, campaignCache, campaignQueue)

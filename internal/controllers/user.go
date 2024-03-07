@@ -15,13 +15,13 @@ import (
 )
 
 type signUpRequest struct {
-	FullName    string     `json:"fullName,omitempty"`
-	PhoneNumber string     `json:"phoneNumber,omitempty"`
-	Email       string     `json:"email,omitempty"`
-	UserName    string     `json:"userName,omitempty"`
-	PassWord    string     `json:"password,omitempty"`
-	Birthday    string     `json:"birthday,omitempty"`
-	LatestLogin *time.Time `json:"latestLogin,omitempty"`
+	FullName    string    `json:"fullName,omitempty"`
+	PhoneNumber string    `json:"phoneNumber,omitempty"`
+	Email       string    `json:"email,omitempty"`
+	UserName    string    `json:"userName,omitempty"`
+	PassWord    string    `json:"password,omitempty"`
+	Birthday    string    `json:"birthday,omitempty"`
+	LatestLogin time.Time `json:"latestLogin,omitempty"`
 }
 
 type loginRequest struct {
@@ -124,7 +124,7 @@ func (h *userHandler) Login(c *gin.Context) {
 		return
 	}
 	//check userID eligible for any campaigns
-	if userInfo.LatestLogin == nil && h.campaignCache.DecreaseCounter(cache.LoginFirstToTopupVoucher) {
+	if h.campaignCache.DecreaseCounter(cache.LoginFirstToTopupVoucher) {
 		go h.campaignQueue.Submit(campaignRequest{
 			campaignName: cache.LoginFirstToTopupVoucher,
 			userID:       userInfo.ID,
@@ -167,8 +167,7 @@ func (r loginRequest) isRequestValid() bool {
 func (r loginRequest) getQueries() map[string]string {
 	queries := make(map[string]string, 4)
 	queries["email"] = r.Email
-	queries["userName"] = r.UserName
-	queries["phoneNumber"] = r.PhoneNumber
-	queries["password"] = r.PassWord
+	queries["user_name"] = r.UserName
+	queries["phone_number"] = r.PhoneNumber
 	return queries
 }

@@ -2,11 +2,11 @@ POST http://localhost:8083/api/v1/user/signup
 Content-Type: application/json
 
 {
-  "fullName": "Nguyen Van C",
-  "phoneNumber": "0123456729",
-  "email": "cnv@gmail.com",
-  "userName": "cnv",
-  "password": "abc@123",
+  "fullName": "Nguyen Van K",
+  "phoneNumber": "012345672222",
+  "email": "cn12w@gmail.com",
+  "userName": "cn12w",
+  "password": "abc12@123",
   "birthday": "1998-01-01"
 }
 
@@ -15,8 +15,8 @@ POST http://localhost:8083/api/v1/user/login
 Content-Type: application/json
 
 {
-  "phoneNumber": "0123456729",
-  "password": "abc@123"
+  "phoneNumber": "012345672222",
+  "password": "abc12@123"
 }
 
 ###

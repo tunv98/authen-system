@@ -36,7 +36,7 @@ Plan:
 + Status is in active, used, expired to get status voucher of user and show in app list voucher user owner with its status if necessary.
 
 ### Setup infrastructure
-+ Run MySQL by docker-compose with init by file sql/init.sql[dataium_trigger_push_file.puml](..%2F..%2F..%2F..%2F..%2FDesktop%2Fuml%2Fdataium_trigger_push_file.puml)
++ Run MySQL by docker-compose with init by file sql/init.sql
   
         docker-compose up -d
 + Add environment to get config from file

@@ -27,8 +27,8 @@ func (r *userRepo) Create(user *models.User) error {
 
 func (r *userRepo) Find(queries map[string]string) (models.User, error) {
 	var user models.User
-	r.db = buildGormQuery(r.db, queries)
-	if err := r.db.First(&user).Error; err != nil {
+	query := buildGormQuery(r.db, queries)
+	if err := query.First(&user).Error; err != nil {
 		return user, errors.Wrapf(err, "failed to find user")
 	}
 	return user, nil
@@ -39,6 +39,6 @@ func (r *userRepo) UpdateLatestLogin(userID uint) error {
 	return r.db.
 		Model(&models.User{}).
 		Where("id = ?", userID).
-		Update("latest_login", &now).
+		Update("latest_login", now).
 		Error
 }

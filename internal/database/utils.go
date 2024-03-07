@@ -7,13 +7,14 @@ import (
 )
 
 func buildGormQuery(db *gorm.DB, queries map[string]string) *gorm.DB {
+	query := db
 	for field, value := range queries {
 		if value == "" {
 			continue
 		}
-		db.Where(fmt.Sprintf("%s = ?", field), value)
+		query = query.Where(fmt.Sprintf("%s=?", field), value)
 	}
-	return db
+	return query
 }
 
 func generateUniqueCode() string {

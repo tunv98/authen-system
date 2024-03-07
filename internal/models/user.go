@@ -13,5 +13,5 @@ type User struct {
 	UserName    string `gorm:"unique"`
 	PassWord    string `gorm:"not null"`
 	Birthday    string
-	LatestLogin *time.Time `gorm:"default:null"`
+	LatestLogin time.Time `gorm:"default:null"`
 }

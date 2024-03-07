@@ -124,7 +124,7 @@ func (h *userHandler) Login(c *gin.Context) {
 		return
 	}
 	//check userID eligible for any campaigns
-	if h.campaignCache.DecreaseCounter(cache.LoginFirstToTopupVoucher) {
+	if userInfo.LatestLogin == nil && h.campaignCache.DecreaseCounter(cache.LoginFirstToTopupVoucher) {
 		go h.campaignQueue.Submit(campaignRequest{
 			campaignName: cache.LoginFirstToTopupVoucher,
 			userID:       userInfo.ID,

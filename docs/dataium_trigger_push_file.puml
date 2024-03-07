@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+participant TVA as tva
+database MongoDB as db
+participant Heimdall as hd
+participant FTPServer as ftp
+participant Bank as bank
+participant ReconAPI as api
+tva -> db: fetch handle trx and stm file job configs
+db --> tva: receive list job configs
+tva -> tva: create cronjob for each config with bank account
+tva -> hd: trigger get file at scheduled time
+alt call FTP to get data from bank
+    hd -> hd: read config folder, path infos
+    hd -> ftp: get bank file
+    ftp --> hd: receive bank file
+end
+alt call API (Rest, GraphQL, GRPC) to bank server
+    hd -> bank: call api to get access token
+    bank --> hd: response access token
+    hd -> bank: call api to get list transaction data
+    bank --> hd: response list transaction data
+end
+hd -> hd: convert to Excel file and post-processing data
+hd -> api: send Excel file to process reconcile
+@enduml

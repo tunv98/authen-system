@@ -1,0 +1,45 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+participant User as user
+participant Authentication as authen
+participant Promotion as promo
+participant HomePage as hp
+database MySQL as db
+alt Signup
+user -> authen: input user information
+authen -> authen: verify data && hash password
+authen -> db: create new user in table Users
+db --> authen: response
+authen --> user: response
+end
+
+alt Login
+user -> authen: input user and password
+authen -> authen: verify required data
+authen -> db: get user info
+db --> authen: response
+authen -> authen: hash password from request and check with user info response
+authen -> authen: gen jwt
+authen --> user: response token
+alt LatestLogin is null && counter of campaign >0
+    authen -> authen: decrease counter
+    authen -> promo: pass userID and campaignID
+    promo -> db: create voucher with infor userID and campaignID
+    db --> promo: response
+    promo -> promo: calculate status between now and expired time
+    promo --> authen: response
+end
+
+end
+
+alt Access Resource
+    user -> authen: send with access token
+    authen -> authen: validate token && check available time
+    authen -> hp: view homepage
+    hp --> authen: response
+    authen --> user: response
+end
+
+@enduml

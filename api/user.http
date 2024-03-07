@@ -7,8 +7,7 @@ Content-Type: application/json
   "email": "anv@gmail.com",
   "userName": "anv",
   "password": "abc@123",
-  "birthday": "1998-01-01",
-  "latestLogin": "2024-03-06T00:00:00Z"
+  "birthday": "1998-01-01"
 }
 
 ###
@@ -23,4 +22,4 @@ Content-Type: application/json
 ###
 GET http://localhost:8083/api/v1/home
 Content-Type: application/json
-authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDk3ODQ2MjUsInN1YiI6IjEifQ.iOOI5s0wV6c0rXshbfshyuFFqBM6HEA6PPxoLjNFCmM
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDk4MTM0NDgsInN1YiI6IjEifQ.ZUeTfq4d-NaH7v4-BDsA6XQ35hIDSbUJj_MX6ilrAvM

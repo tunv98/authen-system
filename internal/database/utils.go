@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -13,4 +14,8 @@ func buildGormQuery(db *gorm.DB, queries map[string]string) *gorm.DB {
 		db.Where(fmt.Sprintf("%s = ?", field), value)
 	}
 	return db
+}
+
+func generateUniqueCode() string {
+	return uuid.New().String()
 }

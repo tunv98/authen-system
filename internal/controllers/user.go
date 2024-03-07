@@ -5,6 +5,8 @@ import (
 	"authen-system/internal/config"
 	"authen-system/internal/database"
 	"authen-system/internal/models"
+	"authen-system/pkg/cache"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
@@ -13,13 +15,13 @@ import (
 )
 
 type signUpRequest struct {
-	FullName    string    `json:"fullName,omitempty"`
-	PhoneNumber string    `json:"phoneNumber,omitempty"`
-	Email       string    `json:"email,omitempty"`
-	UserName    string    `json:"userName,omitempty"`
-	PassWord    string    `json:"password,omitempty"`
-	Birthday    string    `json:"birthday,omitempty"`
-	LatestLogin time.Time `json:"latestLogin,omitempty"`
+	FullName    string     `json:"fullName,omitempty"`
+	PhoneNumber string     `json:"phoneNumber,omitempty"`
+	Email       string     `json:"email,omitempty"`
+	UserName    string     `json:"userName,omitempty"`
+	PassWord    string     `json:"password,omitempty"`
+	Birthday    string     `json:"birthday,omitempty"`
+	LatestLogin *time.Time `json:"latestLogin,omitempty"`
 }
 
 type loginRequest struct {
@@ -29,27 +31,33 @@ type loginRequest struct {
 	PassWord    string `json:"password,omitempty"`
 }
 
-type Handler interface {
+type UserHandler interface {
 	SignUp(ctx *gin.Context)
 	Login(ctx *gin.Context)
 }
 
-type handler struct {
-	userRepo   database.UserRepository
-	authConfig config.Authentication
+type userHandler struct {
+	userRepo      database.UserRepository
+	authConfig    config.Authentication
+	campaignCache cache.Cacheable
+	campaignQueue CampaignQueue
 }
 
-func NewHandler(
+func NewUserHandler(
 	userRepo database.UserRepository,
 	authConfig config.Authentication,
-) Handler {
-	return &handler{
-		userRepo:   userRepo,
-		authConfig: authConfig,
+	campaignCache cache.Cacheable,
+	campaignQueue CampaignQueue,
+) UserHandler {
+	return &userHandler{
+		userRepo:      userRepo,
+		authConfig:    authConfig,
+		campaignCache: campaignCache,
+		campaignQueue: campaignQueue,
 	}
 }
 
-func (h *handler) SignUp(c *gin.Context) {
+func (h *userHandler) SignUp(c *gin.Context) {
 	signUpReq := signUpRequest{}
 	if err := c.ShouldBindJSON(&signUpReq); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
@@ -73,18 +81,17 @@ func (h *handler) SignUp(c *gin.Context) {
 		UserName:    signUpReq.UserName,
 		PassWord:    string(hash),
 		Birthday:    signUpReq.Birthday,
-		LatestLogin: signUpReq.LatestLogin,
 	}
 	if err := h.userRepo.Create(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"err": "failed to create user",
+			"err": fmt.Errorf("failed to create user, err: %s", err.Error()),
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-func (h *handler) Login(c *gin.Context) {
+func (h *userHandler) Login(c *gin.Context) {
 	loginReq := loginRequest{}
 	if err := c.ShouldBindJSON(&loginReq); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
@@ -116,7 +123,14 @@ func (h *handler) Login(c *gin.Context) {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
-	if err := h.userRepo.UpdateLatestLogin(userInfo.ID, time.Now()); err != nil {
+	//check userID eligible for any campaigns
+	if h.campaignCache.DecreaseCounter(cache.LoginFirstToTopupVoucher) {
+		go h.campaignQueue.Submit(campaignRequest{
+			campaignName: cache.LoginFirstToTopupVoucher,
+			userID:       userInfo.ID,
+		})
+	}
+	if err := h.userRepo.UpdateLatestLogin(userInfo.ID); err != nil {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}

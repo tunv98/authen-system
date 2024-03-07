@@ -4,6 +4,7 @@ import (
 	"authen-system/internal/config"
 	"authen-system/internal/controllers"
 	"authen-system/internal/database"
+	"authen-system/pkg/cache"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
@@ -15,7 +16,14 @@ func registerUserHandler(g gin.IRouter, config config.App) {
 		return
 	}
 	userRepo := database.NewUserRepository(db)
-	handler := controllers.NewHandler(userRepo, config.Authentication)
+	voucherRepo := database.NewVoucherRepository(db)
+	campaignRepo := database.NewCampaignRepository(db)
+	voucherHandler := controllers.NewVoucherHandler(voucherRepo, campaignRepo)
+	campaignQueue := controllers.NewCampaignQueue(voucherHandler)
+	defer campaignQueue.Start()
+
+	campaignCache := cache.NewCampaign()
+	handler := controllers.NewUserHandler(userRepo, config.Authentication, campaignCache, campaignQueue)
 	userAPI := g.Group("/user")
 	{
 		userAPI.POST("/login", handler.Login)

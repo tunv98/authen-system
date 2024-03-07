@@ -20,7 +20,7 @@ func ProvideSQL(config config.MySQL) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err = db.AutoMigrate(&models.User{}); err != nil {
+	if err = db.AutoMigrate(&models.User{}, &models.Voucher{}, &models.Campaign{}); err != nil {
 		return nil, err
 	}
 	sqlDB, err := db.DB()

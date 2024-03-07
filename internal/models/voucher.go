@@ -16,8 +16,10 @@ const (
 type Voucher struct {
 	gorm.Model
 	Code        string `gorm:"unique"`
-	CampaignID  uint   `gorm:"foreignKey:CampaignID"`
-	UserID      uint   `gorm:"foreignKey:UserID"`
+	CampaignID  uint
+	UserID      uint
 	ExpiredTime time.Time
 	Status      VoucherStatus `gorm:"type:ENUM('active','used','expired')"`
+	User        User          `gorm:"foreignKey:UserID"`
+	Campaign    Campaign      `gorm:"foreignKey:CampaignID"`
 }

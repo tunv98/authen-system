@@ -1,6 +1,7 @@
 # Promotion System
 
 This repository contains the codes of the Authentication System and Promotion System.
+
 Require:
 + User login with account and password, account is username or email or phone number
 + Register a profile: full name, phone number, email, user name, password, birthday, latest login and 3 of them can not null
@@ -27,6 +28,9 @@ Plan:
 + Use memcached or redis to store counter data
 + Use other broker queue such as gg pub/sub, kafka instead of
 + Separate monolith to microservice with authentication service, promotion, and more...
++ Sharding database for users if optimize big queries, reduce hit db
++ Add metrics follow parameters as memory, cpu, latency => Set auto scale (hpa) if necessary
++ If voucher delivery for the big number of users, use redis to store data cache and use get bit to check user in list to create voucher then 
 
 ### Sequence 
 ![sequence](./docs/sequence.jpg)

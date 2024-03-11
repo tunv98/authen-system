@@ -15,13 +15,13 @@ import (
 )
 
 type signUpRequest struct {
-	FullName    string    `json:"fullName,omitempty"`
-	PhoneNumber string    `json:"phoneNumber,omitempty"`
-	Email       string    `json:"email,omitempty"`
-	UserName    string    `json:"userName,omitempty"`
-	PassWord    string    `json:"password,omitempty"`
-	Birthday    string    `json:"birthday,omitempty"`
-	LatestLogin time.Time `json:"latestLogin,omitempty"`
+	FullName    string     `json:"fullName,omitempty"`
+	PhoneNumber string     `json:"phoneNumber,omitempty"`
+	Email       string     `json:"email,omitempty"`
+	UserName    string     `json:"userName,omitempty"`
+	PassWord    string     `json:"password,omitempty"`
+	Birthday    string     `json:"birthday,omitempty"`
+	LatestLogin *time.Time `json:"latestLogin,omitempty"`
 }
 
 type loginRequest struct {
@@ -124,7 +124,7 @@ func (h *userHandler) Login(c *gin.Context) {
 		return
 	}
 	//check userID eligible for any campaigns
-	if h.campaignCache.DecreaseCounter(cache.LoginFirstToTopupVoucher) {
+	if userInfo.LatestLogin == nil && h.campaignCache.DecreaseCounter(cache.LoginFirstToTopupVoucher) {
 		go h.campaignQueue.Submit(campaignRequest{
 			campaignName: cache.LoginFirstToTopupVoucher,
 			userID:       userInfo.ID,
